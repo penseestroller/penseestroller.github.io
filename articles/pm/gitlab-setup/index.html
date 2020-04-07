@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.0.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.loli.net/css?family=Noto Serif SC:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic|Roboto Mono:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-flash.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '7.5.0',
+    exturl: false,
+    sidebar: {"position":"right","width":320,"display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":true,"show_result":true,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":true},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="Gitlab是一款开源的版本管理系统,可实现自托管的Git项目仓库,功能类似Github.GitLab有社区版和企业版,采用Ruby on Rails开发,社区版基于MIT License,其功能基本满足中小型团队的需求.更多功能看https:&#x2F;&#x2F;about.gitlab.com&#x2F;features&#x2F;">
+<meta name="keywords" content="centos,gitlab">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CentOS上安装部署Gitlab">
+<meta property="og:url" content="http:&#x2F;&#x2F;invictuscj.win&#x2F;articles&#x2F;pm&#x2F;gitlab-setup&#x2F;index.html">
+<meta property="og:site_name" content="林 中 人">
+<meta property="og:description" content="Gitlab是一款开源的版本管理系统,可实现自托管的Git项目仓库,功能类似Github.GitLab有社区版和企业版,采用Ruby on Rails开发,社区版基于MIT License,其功能基本满足中小型团队的需求.更多功能看https:&#x2F;&#x2F;about.gitlab.com&#x2F;features&#x2F;">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2020-04-07T07:44:57.128Z">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://invictuscj.win/articles/pm/gitlab-setup/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>CentOS上安装部署Gitlab | 林 中 人</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">林 中 人</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <p class="site-subtitle">林中两路分，一路人迹稀。我独选此路，境遇乃相异。</p>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none"
+           placeholder="搜索..." spellcheck="false"
+           type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://invictuscj.win/articles/pm/gitlab-setup/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="PenseeStroller">
+      <meta itemprop="description" content="点滴汇集">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="林 中 人">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          CentOS上安装部署Gitlab
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2017-02-15 00:00:00" itemprop="dateCreated datePublished" datetime="2017-02-15T00:00:00+08:00">2017-02-15</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E9%A1%B9%E7%9B%AE%E7%AE%A1%E7%90%86/" itemprop="url" rel="index">
+                    <span itemprop="name">项目管理</span>
+                  </a>
+                </span>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/articles/pm/gitlab-setup/#comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/articles/pm/gitlab-setup/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>3k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>3 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <hr>
+<p><a href="https://about.gitlab.com/" target="_blank" rel="noopener">Gitlab</a>是一款开源的版本管理系统,可实现自托管的Git项目仓库,功能类似Github.GitLab有社区版和企业版,采用Ruby on Rails开发,社区版基于MIT License,其功能基本满足中小型团队的需求.<br>更多功能看<a href="https://about.gitlab.com/features/" target="_blank" rel="noopener">https://about.gitlab.com/features/</a></p>
+<a id="more"></a>
+<h3 id="系统环境"><a href="#系统环境" class="headerlink" title="系统环境"></a>系统环境</h3><p>操作系统:CentOS7.3 64位</p>
+<h3 id="安装版本"><a href="#安装版本" class="headerlink" title="安装版本"></a>安装版本</h3><p>GitLab社区版(GitLab Community Edition)GitLab CE</p>
+<h3 id="安装过程"><a href="#安装过程" class="headerlink" title="安装过程"></a>安装过程</h3><p>GitLab有多种安装方式,目前官方提供了GitLab-CE Omnibus安装包,根据官网上的详细介绍可以选择自己操作系统对应的版本按步骤操作,这样相对会比较简单,源码安装等方式显得非常痛苦.GitLab依赖比较多,部署起来也比较大,还是推荐官方说明来安装.<br><a href="https://about.gitlab.com/downloads" target="_blank" rel="noopener">https://about.gitlab.com/downloads</a></p>
+<h4 id="安装配置依赖"><a href="#安装配置依赖" class="headerlink" title="安装配置依赖"></a>安装配置依赖</h4><p>GitLab采用Postfix搭建邮件服务器,当然可以安装自己需求使用Sendmail或其他.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">sudo yum install curl policycoreutils openssh-server openssh-clients</span><br><span class="line">sudo systemctl <span class="built_in">enable</span> sshd</span><br><span class="line">sudo systemctl start sshd</span><br><span class="line">sudo yum install postfix</span><br><span class="line">sudo systemctl <span class="built_in">enable</span> postfix</span><br><span class="line">sudo systemctl start postfix</span><br><span class="line">sudo firewall-cmd --permanent --add-service=http</span><br><span class="line">sudo systemctl reload firewalld</span><br></pre></td></tr></table></figure>
+
+<h4 id="下载GitLab-CE-Omnibus安装包"><a href="#下载GitLab-CE-Omnibus安装包" class="headerlink" title="下载GitLab-CE Omnibus安装包"></a>下载GitLab-CE Omnibus安装包</h4><p>GitLab-CE Omnibus安装包有200多M,官方的资源会比较慢,目前国内有清华大学和浙江大学两个源,我们采用浙江大学的源来下载安装.<br>浙大开源镜像站: <a href="http://mirrors.lifetoy.org/gitlab-ce/" target="_blank" rel="noopener">http://mirrors.lifetoy.org/gitlab-ce/</a></p>
+<h5 id="Debian-Ubuntu"><a href="#Debian-Ubuntu" class="headerlink" title="Debian/Ubuntu"></a>Debian/Ubuntu</h5><p>首先信任GitLab的gpg公钥 </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl https://packages.gitlab.com/gpg.key 2&gt; /dev/null | sudo apt-key add - &amp;&gt;/dev/null</span><br></pre></td></tr></table></figure>
+
+<p>根据Debian/Ubuntu版本,将源信息写入<code>/etc/apt/sources.list.d/gitlab-ce.list</code></p>
+<ul>
+<li><p>Debian7(Wheezy) </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">"deb http://mirrors.lifetoy.org/gitlab-ce/debian wheezy main"</span> | sudo tee -a /etc/apt/sources.list.d/gitlab-ce.list</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Debian8(Jessie) </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">"deb http://mirrors.lifetoy.org/gitlab-ce/debian jessie main"</span> | sudo tee -a /etc/apt/sources.list.d/gitlab-ce.list</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Ubuntu 14.04LTS </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">"deb http://mirrors.lifetoy.org/gitlab-ce/ubuntu trusty main"</span> | sudo tee -a /etc/apt/sources.list.d/gitlab-ce.list</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<p>安装GitLab-CE:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get update</span><br><span class="line">sudo apt-get install gitlab-ce</span><br></pre></td></tr></table></figure>
+<h5 id="CentOS-RHEL"><a href="#CentOS-RHEL" class="headerlink" title="CentOS/RHEL"></a>CentOS/RHEL</h5><p>新建/etc/yum.repos.d/gitlab-ce.repo,内容如下:</p>
+<ul>
+<li><p>CentOS6/REHL6</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[gitlab-ce]</span><br><span class="line">name=gitlab-ce</span><br><span class="line">baseurl=http://mirrors.lifetoy.org/gitlab-ce/yum/el6</span><br><span class="line">repo_gpgcheck=0</span><br><span class="line">gpgcheck=0</span><br><span class="line">enabled=1</span><br><span class="line">gpgkey=https://packages.gitlab.com/gpg.key</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>CentOS7/REHL7</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[gitlab-ce]</span><br><span class="line">name=gitlab-ce</span><br><span class="line">baseurl=http://mirrors.lifetoy.org/gitlab-ce/yum/el7</span><br><span class="line">repo_gpgcheck=0</span><br><span class="line">gpgcheck=0</span><br><span class="line">enabled=1</span><br><span class="line">gpgkey=https://packages.gitlab.com/gpg.key</span><br></pre></td></tr></table></figure>
+<h4 id="安装GitLab-CE"><a href="#安装GitLab-CE" class="headerlink" title="安装GitLab-CE:"></a>安装GitLab-CE:</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo yum makecache</span><br><span class="line">sudo yum install gitlab-ce</span><br></pre></td></tr></table></figure>
+<h4 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h4><p>所有的GitLab配置都在<code>/etc/gitlab/gitlab.rb</code>中修改,配置完后,启动GitLab,每次修改配置后都要重新编译</p>
+</li>
+<li><p>修改配置<code>external_url</code><br>修改这个配置会影响GitLab里面显示的仓库链接</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">external_url = <span class="string">'http://yourip:port'</span></span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<p>设置ssh shell的端口</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gitlab_rails[<span class="string">'gitlab_shell_ssh_port'</span>] = 9022</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>修改GitLab邮件服务器,使用腾讯企业邮箱<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">gitlab_rails[<span class="string">'smtp_enable'</span>] = <span class="literal">true</span></span><br><span class="line">gitlab_rails[<span class="string">'smtp_address'</span>] = <span class="string">"smtp.exmail.qq.com"</span></span><br><span class="line">gitlab_rails[<span class="string">'smtp_port'</span>] = 25</span><br><span class="line">gitlab_rails[<span class="string">'smtp_user_name'</span>] = <span class="string">"xxx@yy.com"</span></span><br><span class="line">gitlab_rails[<span class="string">'smtp_password'</span>] = <span class="string">"xxx"</span></span><br><span class="line">gitlab_rails[<span class="string">'smtp_domain'</span>] = <span class="string">"smtp.qq.com"</span></span><br><span class="line">gitlab_rails[<span class="string">'smtp_authentication'</span>] = <span class="string">'login'</span></span><br><span class="line">gitlab_rails[<span class="string">'smtp_enable_starttls_auto'</span>] = <span class="literal">true</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># If your SMTP server does not like the default 'From: gitlab@localhost' you</span></span><br><span class="line"><span class="comment"># can change the 'From' with this setting.</span></span><br><span class="line">gitlab_rails[<span class="string">'gitlab_email_from'</span>] = <span class="string">'xx@yy.com'</span></span><br><span class="line">gitlab_rails[<span class="string">'gitlab_email_reply_to'</span>] = <span class="string">'xx@yy.com'</span></span><br></pre></td></tr></table></figure></li>
+<li>重新编译:<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo gitlab-ctl reconfigure</span><br></pre></td></tr></table></figure>
+现在进主机可登录GitLab了,首次登录会要求重写密码,之后就可以使用了.</li>
+</ul>
+<h4 id="GitLab组成"><a href="#GitLab组成" class="headerlink" title="GitLab组成"></a>GitLab组成</h4><p>GitLab部署好后,所有工程都在/opt/gitlab目录下.<br>GitLab比较大,系统部署有很多部分组成,其构成如下:</p>
+<ul>
+<li>gitlab-shell:用于处理Git命令和修改authorized keys列表</li>
+<li>gitlab-workhorse:轻量级的反向代理服务器</li>
+<li>logrotate:日志文件管理工具</li>
+<li>nginx:静态web服务器</li>
+<li>postgresql:数据库</li>
+<li>redis:缓存数据库</li>
+<li>sidekiq:用于在后台执行队列任务(异步执行)</li>
+<li>unicorn:GitLab Rails应用是托管在这个服务器上面的。</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    
+      <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束 <i class="fa fa-archive"></i> 感谢您的阅读-------------</div>
+    
+</div>
+    
+      
+        <div class="reward-container">
+  <div>觉得好，点这里 ^_^</div>
+  <button disable="enable" onclick="var qr = document.getElementById(&quot;qr&quot;); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.png" alt="PenseeStroller 微信支付">
+        <p>微信支付</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/images/alipay.png" alt="PenseeStroller 支付宝">
+        <p>支付宝</p>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-title">
+    <strong>本文标题：</strong>CentOS上安装部署Gitlab
+  </li>
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>PenseeStroller
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://invictuscj.win/articles/pm/gitlab-setup/" title="CentOS上安装部署Gitlab">http://invictuscj.win/articles/pm/gitlab-setup/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>许可协议： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/zh-CN" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/centos/" rel="tag"><i class="fa fa-tag"></i> centos</a>
+              <a href="/tags/gitlab/" rel="tag"><i class="fa fa-tag"></i> gitlab</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+                <a href="/articles/os/centos-update/" rel="next" title="CentOS源更换,更新系统">
+                  <i class="fa fa-chevron-left"></i> CentOS源更换,更新系统
+                </a>
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+                <a href="/articles/docker/docker-run/" rel="prev" title="docker run命令介绍">
+                  docker run命令介绍 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+    <div class="comments" id="comments"></div>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#系统环境"><span class="nav-text">系统环境</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安装版本"><span class="nav-text">安装版本</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安装过程"><span class="nav-text">安装过程</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#安装配置依赖"><span class="nav-text">安装配置依赖</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#下载GitLab-CE-Omnibus安装包"><span class="nav-text">下载GitLab-CE Omnibus安装包</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#Debian-Ubuntu"><span class="nav-text">Debian/Ubuntu</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#CentOS-RHEL"><span class="nav-text">CentOS/RHEL</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#安装GitLab-CE"><span class="nav-text">安装GitLab-CE:</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#配置"><span class="nav-text">配置</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#GitLab组成"><span class="nav-text">GitLab组成</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <img class="site-author-image" itemprop="image" alt="PenseeStroller"
+    src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">PenseeStroller</p>
+  <div class="site-description" itemprop="description">点滴汇集</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">19</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">22</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/penseestroller" title="GitHub &amp;rarr; https:&#x2F;&#x2F;github.com&#x2F;penseestroller" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="http://weibo.com/penseestroller" title="Weibo &amp;rarr; http:&#x2F;&#x2F;weibo.com&#x2F;penseestroller" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/Mailto:invictuscj@foxmail.com" title="E-Mail &amp;rarr; Mailto:invictuscj@foxmail.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/zh-CN" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title">
+      <i class="fa fa-fw fa-link"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="http://iissnan.com/progit/" title="http:&#x2F;&#x2F;iissnan.com&#x2F;progit&#x2F;" rel="noopener" target="_blank">Pro Git</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://dotnet.github.io/" title="https:&#x2F;&#x2F;dotnet.github.io&#x2F;" rel="noopener" target="_blank">DotNet</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://www.waspring.com/" title="https:&#x2F;&#x2F;www.waspring.com&#x2F;" rel="noopener" target="_blank">冰泉蛙</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>     
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 2016 – 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">PenseeStroller</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  
+  <script color='0,0,255' opacity='0.5' zIndex='-1' count='99' src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
+<script src="/js/schemes/muse.js"></script>
+<script src="/js/next-boot.js"></script>
+
+
+
+  
+
+
+
+
+  <script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+
+<script>
+NexT.utils.getScript('//cdnjs.cloudflare.com/ajax/libs/valine/1.3.10/Valine.min.js', () => {
+  var GUEST = ['nick', 'mail', 'link'];
+  var guest = 'nick,mail,link';
+  guest = guest.split(',').filter(item => {
+    return GUEST.includes(item);
+  });
+  new Valine({
+    el: '#comments',
+    verify: false,
+    notify: false,
+    appId: 'ke9B1WOTQSSQdGyo0JG6iu1T-9Nh9j0Va',
+    appKey: 'R6acUmo0uEU4hJEKpi3iinul',
+    placeholder: "请留下您的脚印......",
+    avatar: 'wavatar',
+    meta: guest,
+    pageSize: '10' || 10,
+    visitor: false,
+    lang: 'zh-cn' || 'zh-cn',
+    path: location.pathname,
+    recordIP: true,
+    serverURLs: ''
+  });
+}, window.Valine);
+</script>
+
+</body>
+</html>

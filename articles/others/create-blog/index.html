@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.0.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.loli.net/css?family=Noto Serif SC:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic|Roboto Mono:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-flash.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '7.5.0',
+    exturl: false,
+    sidebar: {"position":"right","width":320,"display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":true,"show_result":true,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":true},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="试试用Node.js的Hexo和Github来搭建个人博客，免去了维护服务器等问题，而且完全免费！">
+<meta name="keywords" content="hexo,npm,github">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hexo + Github 搭建个人博客">
+<meta property="og:url" content="http:&#x2F;&#x2F;invictuscj.win&#x2F;articles&#x2F;others&#x2F;create-blog&#x2F;index.html">
+<meta property="og:site_name" content="林 中 人">
+<meta property="og:description" content="试试用Node.js的Hexo和Github来搭建个人博客，免去了维护服务器等问题，而且完全免费！">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http:&#x2F;&#x2F;invictuscj.win&#x2F;blog_images&#x2F;create_blog&#x2F;Git1.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;invictuscj.win&#x2F;blog_images&#x2F;create_blog&#x2F;Git2.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;invictuscj.win&#x2F;blog_images&#x2F;create_blog&#x2F;Git3.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;invictuscj.win&#x2F;blog_images&#x2F;create_blog&#x2F;Git4.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;invictuscj.win&#x2F;blog_images&#x2F;create_blog&#x2F;Git5.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;invictuscj.win&#x2F;blog_images&#x2F;create_blog&#x2F;Git6.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;invictuscj.win&#x2F;blog_images&#x2F;create_blog&#x2F;Git7.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;invictuscj.win&#x2F;blog_images&#x2F;create_blog&#x2F;Git8.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;invictuscj.win&#x2F;blog_images&#x2F;create_blog&#x2F;Git9.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;invictuscj.win&#x2F;blog_images&#x2F;create_blog&#x2F;Git10.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;invictuscj.win&#x2F;blog_images&#x2F;create_blog&#x2F;Git11.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;invictuscj.win&#x2F;blog_images&#x2F;create_blog&#x2F;Git12.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;invictuscj.win&#x2F;blog_images&#x2F;create_blog&#x2F;node1.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;invictuscj.win&#x2F;blog_images&#x2F;create_blog&#x2F;node2.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;invictuscj.win&#x2F;blog_images&#x2F;create_blog&#x2F;node3.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;invictuscj.win&#x2F;blog_images&#x2F;create_blog&#x2F;node4.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;invictuscj.win&#x2F;blog_images&#x2F;create_blog&#x2F;node5.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;invictuscj.win&#x2F;blog_images&#x2F;create_blog&#x2F;node6.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;invictuscj.win&#x2F;blog_images&#x2F;create_blog&#x2F;node7.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;invictuscj.win&#x2F;blog_images&#x2F;create_blog&#x2F;cmd3.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;invictuscj.win&#x2F;blog_images&#x2F;create_blog&#x2F;github1.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;invictuscj.win&#x2F;blog_images&#x2F;create_blog&#x2F;github2.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;invictuscj.win&#x2F;blog_images&#x2F;create_blog&#x2F;github3.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;invictuscj.win&#x2F;blog_images&#x2F;create_blog&#x2F;github4.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;invictuscj.win&#x2F;blog_images&#x2F;create_blog&#x2F;hexo1.png">
+<meta property="og:updated_time" content="2020-04-07T07:44:57.128Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http:&#x2F;&#x2F;invictuscj.win&#x2F;blog_images&#x2F;create_blog&#x2F;Git1.png">
+
+<link rel="canonical" href="http://invictuscj.win/articles/others/create-blog/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>Hexo + Github 搭建个人博客 | 林 中 人</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">林 中 人</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <p class="site-subtitle">林中两路分，一路人迹稀。我独选此路，境遇乃相异。</p>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none"
+           placeholder="搜索..." spellcheck="false"
+           type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://invictuscj.win/articles/others/create-blog/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="PenseeStroller">
+      <meta itemprop="description" content="点滴汇集">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="林 中 人">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Hexo + Github 搭建个人博客
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2016-12-20 00:00:00" itemprop="dateCreated datePublished" datetime="2016-12-20T00:00:00+08:00">2016-12-20</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%9D%82%E8%B0%88/" itemprop="url" rel="index">
+                    <span itemprop="name">杂谈</span>
+                  </a>
+                </span>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/articles/others/create-blog/#comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/articles/others/create-blog/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>6k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>5 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <hr>
+<p>试试用Node.js的Hexo和Github来搭建个人博客，免去了维护服务器等问题，而且完全免费！</p>
+<a id="more"></a>
+
+<h3 id="1-文档"><a href="#1-文档" class="headerlink" title="1. 文档"></a>1. 文档</h3><ul>
+<li>Hexo文档：<a href="https://hexo.io/zh-cn/docs/" target="_blank" rel="noopener">https://hexo.io/zh-cn/docs/</a></li>
+<li>Next文档：<a href="http://theme-next.iissnan.com/getting-started.html" target="_blank" rel="noopener">http://theme-next.iissnan.com/getting-started.html</a></li>
+</ul>
+<h3 id="2-环境准备"><a href="#2-环境准备" class="headerlink" title="2. 环境准备"></a>2. 环境准备</h3><ul>
+<li><a href="https://www.git-scm.com/" target="_blank" rel="noopener">Git</a></li>
+<li><a href="https://nodejs.org" target="_blank" rel="noopener">Node.js</a></li>
+</ul>
+<h3 id="3-Windows下安装部署"><a href="#3-Windows下安装部署" class="headerlink" title="3. Windows下安装部署"></a>3. Windows下安装部署</h3><h4 id="3-1-安装Git"><a href="#3-1-安装Git" class="headerlink" title="3.1 安装Git"></a>3.1 安装Git</h4><p>Windows下安装其实还是蛮简单的，全部默认，下一步，就好了。</p>
+<p><img src="/blog_images/create_blog/Git1.png" alt="Git1"></p>
+<p><img src="/blog_images/create_blog/Git2.png" alt="Git2"></p>
+<p><img src="/blog_images/create_blog/Git3.png" alt="Git3"></p>
+<p><img src="/blog_images/create_blog/Git4.png" alt="Git4"></p>
+<p><img src="/blog_images/create_blog/Git5.png" alt="Git5"></p>
+<p><img src="/blog_images/create_blog/Git6.png" alt="Git6"></p>
+<p><img src="/blog_images/create_blog/Git7.png" alt="Git7"></p>
+<p><img src="/blog_images/create_blog/Git8.png" alt="Git8"></p>
+<p><img src="/blog_images/create_blog/Git9.png" alt="Git9"></p>
+<p><img src="/blog_images/create_blog/Git10.png" alt="Git10"></p>
+<p><img src="/blog_images/create_blog/Git11.png" alt="Git11"></p>
+<p><img src="/blog_images/create_blog/Git12.png" alt="Git12"></p>
+<h4 id="3-2-安装Node-js"><a href="#3-2-安装Node-js" class="headerlink" title="3.2 安装Node.js"></a>3.2 安装Node.js</h4><p>一样，默认选择加下一步。</p>
+<p><img src="/blog_images/create_blog/node1.png" alt="Node1"></p>
+<p><img src="/blog_images/create_blog/node2.png" alt="Node2"></p>
+<p><img src="/blog_images/create_blog/node3.png" alt="Node3"></p>
+<p><img src="/blog_images/create_blog/node4.png" alt="Node4"></p>
+<p><img src="/blog_images/create_blog/node5.png" alt="Node5"></p>
+<p><img src="/blog_images/create_blog/node6.png" alt="Node6"></p>
+<p><img src="/blog_images/create_blog/node7.png" alt="Node7"></p>
+<h4 id="3-3-安装结果检查"><a href="#3-3-安装结果检查" class="headerlink" title="3.3 安装结果检查"></a>3.3 安装结果检查</h4><p>Windows下启动命令行或PowerShell。分别输入：</p>
+<figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&gt; node -v</span><br><span class="line">&gt; npm -v</span><br><span class="line">&gt; git --version</span><br></pre></td></tr></table></figure>
+<p>如果结果显示如下图，则说明各环境安装正确，可以进行后续操作。<br><img src="/blog_images/create_blog/cmd3.png" alt="cmd3"></p>
+<h3 id="4-Debian下安装"><a href="#4-Debian下安装" class="headerlink" title="4. Debian下安装"></a>4. Debian下安装</h3><h4 id="4-1-更新系统环境软件包"><a href="#4-1-更新系统环境软件包" class="headerlink" title="4.1 更新系统环境软件包"></a>4.1 更新系统环境软件包</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get update</span><br><span class="line">$ sudo apt-get upgrade</span><br></pre></td></tr></table></figure>
+
+<h4 id="4-2-安装git"><a href="#4-2-安装git" class="headerlink" title="4.2 安装git"></a>4.2 安装git</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt install git-core -y</span><br><span class="line">$ git --version</span><br></pre></td></tr></table></figure>
+
+<p>显示版本号信息则表示安装成功。</p>
+<h4 id="4-3-安装Node-js"><a href="#4-3-安装Node-js" class="headerlink" title="4.3 安装Node.js"></a>4.3 安装Node.js</h4><p>通过nvm来管理Node.js,安装nvm</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo wget -qO- https://raw.github.com/creationix/nvm/master/install.sh | sh</span><br></pre></td></tr></table></figure>
+
+<p>如果没有wget,则安装wget先</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt install wget</span><br></pre></td></tr></table></figure>
+
+<p>更新配置并安装Node.js</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">source</span> ~/.profile</span><br><span class="line">$ nvm install stable</span><br><span class="line">$ node --version</span><br><span class="line">$ npm --version</span><br></pre></td></tr></table></figure>
+<p>如果显示版本信息则表示安装成功。</p>
+<h3 id="5-Github设置"><a href="#5-Github设置" class="headerlink" title="5. Github设置"></a>5. Github设置</h3><p>先在 <a href="https://github.com/" target="_blank" rel="noopener">https://github.com/</a> 注册一个账户，注册好后，登录，创建代码库。<br>登录后，选择界面右上角“+”号下拉，或者点击界面右侧的“New repository”，<br><img src="/blog_images/create_blog/github1.png" alt="github1"></p>
+<p>进入代码库创建界面，在Repository name栏写yourname.github.io（yourname为你github账户名称）<br><img src="/blog_images/create_blog/github2.png" alt="github2"></p>
+<p>代码库创建成功之后，自动跳到项目的代码库管理界面：<br><img src="/blog_images/create_blog/github3.png" alt="github3"></p>
+<p>选择界面右侧的Settings选项卡，进入后，下拉，可以看到GitHub Pages一栏：<br><img src="/blog_images/create_blog/github4.png" alt="github4"><br>这里就是创建Pages的地方，保存即可；保存后在这里可以自定义自己的域名，将yoursite.github.io转向自己的域名。</p>
+<h4 id="5-1-配置Git以上传远程服务器"><a href="#5-1-配置Git以上传远程服务器" class="headerlink" title="5.1 配置Git以上传远程服务器"></a>5.1 配置Git以上传远程服务器</h4><p>首先配置自己账户的身份信息，Git bash中输入：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ git config --global user.name <span class="string">"yourname"</span></span><br><span class="line">$ git config --global user.email <span class="string">"youremail"</span></span><br></pre></td></tr></table></figure>
+<p>Github上传采用SSH密钥的方式，生成密钥：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ssh-keygen -t rsa -C <span class="string">"youremail"</span></span><br></pre></td></tr></table></figure>
+<p>提示选择全默认，按三次回车即可，之后会在当前用户目录下生成一个文件夹<code>.ssh</code>里面有两个文件<code>id_rsa</code>和<code>id_rsa.pub</code>。接着进入Github，登录，进入用户设置<code>setting</code>,选择左侧的<code>SSH and GPG keys</code>,点击<code>New SSH key</code>；用文本工具打开<code>id_rsa.pub</code>，将内容拷贝到Github中的<code>Key</code>中，<code>Title</code>任意写，保存即可。</p>
+<p>测试是否连接通github.com:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ssh -T git@github.com</span><br></pre></td></tr></table></figure>
+<p>返回</p>
+<figure class="highlight ada"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Hi yourname! You<span class="symbol">'ve</span> successfully authenticated, but GitHub does <span class="keyword">not</span> provide shell <span class="keyword">access</span>.</span><br></pre></td></tr></table></figure>
+<p>说明连接成功！</p>
+<h3 id="6-安装配置Hexo"><a href="#6-安装配置Hexo" class="headerlink" title="6. 安装配置Hexo"></a>6. 安装配置Hexo</h3><p>在当前用户家目录下有个文件<code>.npmrc</code>这里存放nodejs的一些配置，我们将源镜像改为淘宝镜像，加快访问速度；将插件安装路径改为自己想要的路径，否则，默认hexo会安装在用户目录下的\AppData\Roaming下。</br><br>打开<code>.npmrc</code>文件，输入：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">registry=https://registry.npm.taobao.org/</span><br><span class="line">prefix=D:\Program Files\nodejs</span><br></pre></td></tr></table></figure>
+<p>启动Git Bash命令行。我把Hexo安装在D:\nodejs目录里。<br>在命令行中输入：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ npm install hexo-cli -g</span><br></pre></td></tr></table></figure>
+<p>可能会有WARN，不用理会，继续输入检查是否安装成功：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo -v</span><br></pre></td></tr></table></figure>
+<p>如果得到：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">hexo-cli: 1.0.2</span><br><span class="line">os: Windows_NT 10.0.14393 win32 x64</span><br><span class="line">http_parser: 2.7.0</span><br><span class="line">node: 6.9.4</span><br><span class="line">v8: 5.1.281.89</span><br><span class="line">uv: 1.9.1</span><br><span class="line">zlib: 1.2.8</span><br><span class="line">ares: 1.10.1-DEV</span><br><span class="line">icu: 57.1</span><br><span class="line">modules: 48</span><br><span class="line">openssl: 1.0.2j</span><br></pre></td></tr></table></figure>
+<p>则说明安装成功。</p>
+<h3 id="7-部署博客项目"><a href="#7-部署博客项目" class="headerlink" title="7. 部署博客项目"></a>7. 部署博客项目</h3><p>在本地目录新建一个文件夹（博客项目），右键选择Git Bash Here,启动Git Bash命令行。<br><img src="/blog_images/create_blog/hexo1.png" alt="hexo1"></p>
+<h4 id="7-1-初始化Hexo"><a href="#7-1-初始化Hexo" class="headerlink" title="7.1 初始化Hexo"></a>7.1 初始化Hexo</h4><p>在Git Bash命令行输入：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo init</span><br></pre></td></tr></table></figure>
+<p>等初始化完成，再输入：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ npm install</span><br></pre></td></tr></table></figure>
+<p>npm自动安装依赖的组件。</p>
+<h4 id="7-2-启动Hexo"><a href="#7-2-启动Hexo" class="headerlink" title="7.2 启动Hexo"></a>7.2 启动Hexo</h4><p>命令行中，继续输入,以生成静态博客站：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo g     <span class="comment">#或 hexo generate</span></span><br></pre></td></tr></table></figure>
+<p>启动web服务，输入：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo s     <span class="comment">#或 hexo server</span></span><br></pre></td></tr></table></figure>
+<p>在浏览器中打开 <a href="http://localhost:4000/" target="_blank" rel="noopener">http://localhost:4000/</a> ，就可以看到运行效果。</p>
+<h4 id="7-3-Hexo的常用命令"><a href="#7-3-Hexo的常用命令" class="headerlink" title="7.3 Hexo的常用命令"></a>7.3 Hexo的常用命令</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ hexo clean			<span class="comment">#清空缓存db.json和public文件夹</span></span><br><span class="line">$ hexo generate			<span class="comment">#简写：hexo g   生成静态文件，会在当前目录下生成一个新的 public 文件夹</span></span><br><span class="line">$ hexo server			<span class="comment">#简写：hexo s   启动本地web服务，可以预览站点</span></span><br><span class="line">$ hexo deploy			<span class="comment">#简写：hexo d   部署到远程服务器（比如github等平台）</span></span><br><span class="line">$ hexo new <span class="string">"artical name"</span>	<span class="comment">#简写：hexo n   新建文章</span></span><br><span class="line">$ hexo new page <span class="string">"page name"</span>	<span class="comment">#新建页面</span></span><br></pre></td></tr></table></figure>
+<h4 id="7-4-Hexo的常用组合命令"><a href="#7-4-Hexo的常用组合命令" class="headerlink" title="7.4 Hexo的常用组合命令"></a>7.4 Hexo的常用组合命令</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ hexo d -g				<span class="comment">#生成并部署到远程服务器</span></span><br><span class="line">$ hexo s -g				<span class="comment">#生成并启动web服务</span></span><br></pre></td></tr></table></figure>
+<h4 id="7-5-功能插件"><a href="#7-5-功能插件" class="headerlink" title="7.5 功能插件"></a>7.5 功能插件</h4><h5 id="7-5-1-部署相关："><a href="#7-5-1-部署相关：" class="headerlink" title="7.5.1 部署相关："></a>7.5.1 部署相关：</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ npm install hexo-deployer-git --save</span><br></pre></td></tr></table></figure>
+
+<h5 id="7-5-2-本地搜索"><a href="#7-5-2-本地搜索" class="headerlink" title="7.5.2 本地搜索"></a>7.5.2 本地搜索</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install hexo-generator-search --save</span><br></pre></td></tr></table></figure>
+
+<p>修改站点配置文件_config.yml:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># Search </span><br><span class="line">search:</span><br><span class="line">  path: search.xml</span><br><span class="line">  field: post</span><br><span class="line">  format: html</span><br><span class="line">  limit: 10000</span><br></pre></td></tr></table></figure>
+<p>path：索引文件的路径，相对于站点根目录。<br>field：搜索范围，默认是 post，还可以选择 page、all，设置成 all 表示搜索所有页面。<br>limit：限制搜索的条目数。</p>
+<p> 修改主题配置文件_config.yml:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">local_search:</span><br><span class="line">  enable: true</span><br><span class="line">  trigger: auto</span><br><span class="line">  top_n_per_article: 1</span><br></pre></td></tr></table></figure>
+<p>top_n_per_article 字段表示在每篇文章中显示的搜索结果数量，设成 -1 会显示每篇文章的所有搜索结果数量。<br>然后，重新部署网站即可愉快的使用本地搜索功能了。</p>
+<h4 id="7-6-Hexo主题修改"><a href="#7-6-Hexo主题修改" class="headerlink" title="7.6 Hexo主题修改"></a>7.6 Hexo主题修改</h4><p>Hexo 默认的主题基本都不会喜欢，流行的一款主题是Next可以在 <a href="https://github.com/iissnan/hexo-theme-next" target="_blank" rel="noopener">https://github.com/iissnan/hexo-theme-next</a> 获取。</br><br>将下载的主题改名为next,拷贝到博客目录的themes文件夹下，修改博客站点目录下的_config.yml配置文件，找到theme,修改为：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">theme: next</span><br></pre></td></tr></table></figure>
+<p>注意：Yaml配置文件的键值对冒号后面有空格，否则配置异常；可以去 <a href="http://www.yamllint.com/" target="_blank" rel="noopener">http://www.yamllint.com/</a> 校验配置文件的有效性。<br>重新执行启动预览：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ hexo clean</span><br><span class="line">$ hexo s -g</span><br></pre></td></tr></table></figure>
+<h4 id="7-7-全局配置文件"><a href="#7-7-全局配置文件" class="headerlink" title="7.7 全局配置文件"></a>7.7 全局配置文件</h4><p>站点下的<code>_config.yml</code>为全局配置文件，在主题目录下也有一个同名配置文件。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br></pre></td><td class="code"><pre><span class="line"># Hexo Configuration</span><br><span class="line">## Docs: https://hexo.io/docs/configuration.html</span><br><span class="line">## Source: https://github.com/hexojs/hexo/</span><br><span class="line">## 键值对，键: 值   注意键后面冒号要空一格再写值，否则异常</span><br><span class="line"></span><br><span class="line"># Site</span><br><span class="line">title: 博客名				#标题博客名</span><br><span class="line">subtitle: 副标题				#副标题</span><br><span class="line">description: 关键字、描述		#给搜索引擎用，对站点的描述</span><br><span class="line">author: 作者				#网站底部的作者名称</span><br><span class="line">language: zh-CN				#语言</span><br><span class="line">email: yourname@xxx.com			#联系邮箱</span><br><span class="line">timezone: Asia/Shanghai			#时区,Hexo 默认使用您电脑的时区;</span><br><span class="line">					#时区列表:https://en.wikipedia.org/wiki/List_of_tz_database_time_zones</span><br><span class="line"># URL 网址</span><br><span class="line">## 如果您的网站存放在子目录中，例如 http://yoursite.com/blog，则请将您的 url 设为 http://yoursite.com/blog 并把 root 设为 /blog/。</span><br><span class="line">url: http://yoursite.com</span><br><span class="line">root: /</span><br><span class="line">permalink: :year/:month/:day/:title/    #生成文件名字的格式</span><br><span class="line">permalink_defaults:</span><br><span class="line"></span><br><span class="line"># Directory 目录配置</span><br><span class="line">source_dir: source                      #源文件夹，这个文件夹用来存放内容。</span><br><span class="line">public_dir: public                      #公共文件夹，这个文件夹用于存放生成的站点文件。</span><br><span class="line">tag_dir: tags                           #标签文件夹</span><br><span class="line">archive_dir: archives                   #归档文件夹</span><br><span class="line">category_dir: categories                #分类文件夹</span><br><span class="line">code_dir: downloads/code                #include code 文件夹</span><br><span class="line">i18n_dir: :lang                         #国际化（i18n）文件夹</span><br><span class="line">skip_render:                            #跳过指定文件的渲染，您可使用 glob 表达式来匹配路径。</span><br><span class="line"></span><br><span class="line"># Writing 文章</span><br><span class="line">new_post_name: :title.md                #新文章文件名</span><br><span class="line">default_layout: post                    #默认布局</span><br><span class="line">titlecase: false                        #标题转化成大写</span><br><span class="line">external_link: true                     #在新标签里打开链接</span><br><span class="line">filename_case: 0                        #转换文件名，1代表小写；2代表大写；默认为0，意思就是创建文章的时候，是否自动帮你转换文件名，默认就行，意义不大。</span><br><span class="line">render_drafts: false                    #是否渲染_drafts目录下的文章，默认为false</span><br><span class="line">post_asset_folder: false                #启动Asset文件夹</span><br><span class="line">relative_link: false                    #把链接改为与根目录的相对位址，默认false</span><br><span class="line">future: true                            #显示未来的文章，默认false</span><br><span class="line">highlight:                              #代码块设置</span><br><span class="line">  enable: true</span><br><span class="line">  line_number: true                     #显示行号</span><br><span class="line">  auto_detect: true</span><br><span class="line">  tab_replace:</span><br><span class="line"></span><br><span class="line"># Category &amp; Tag                        #分类和标签</span><br><span class="line">default_category: uncategorized         #默认分类</span><br><span class="line">category_map:                           #分类别名</span><br><span class="line">tag_map:                                #标签别名</span><br><span class="line"></span><br><span class="line"># Date / Time format                    #日期时间格式</span><br><span class="line">## Hexo uses Moment.js to parse and display date</span><br><span class="line">## You can customize the date format as defined in</span><br><span class="line">## http://momentjs.com/docs/#/displaying/format/</span><br><span class="line">date_format: YYYY-MM-DD</span><br><span class="line">time_format: HH:mm:ss</span><br><span class="line"></span><br><span class="line"># Pagination                             #分页</span><br><span class="line">## Set per_page to 0 to disable pagination</span><br><span class="line">per_page: 10                             #每页文章数，设置成0禁用分页</span><br><span class="line">pagination_dir: page                     #分页目录</span><br><span class="line"></span><br><span class="line"># Extensions                             #插件和主题</span><br><span class="line">## Plugins: https://hexo.io/plugins/</span><br><span class="line">## Themes: https://hexo.io/themes/</span><br><span class="line">theme: next</span><br><span class="line"></span><br><span class="line"># Deployment                             #部署</span><br><span class="line">## Docs: https://hexo.io/docs/deployment.html</span><br><span class="line">deploy:</span><br><span class="line">  type: git</span><br><span class="line">  repository: </span><br><span class="line">    git@github.com:yourname/yourname.github.io.git</span><br><span class="line">  branch: master</span><br></pre></td></tr></table></figure>
+
+<h4 id="7-8-美化"><a href="#7-8-美化" class="headerlink" title="7.8 美化"></a>7.8 美化</h4><h5 id="7-8-1-显示副标题"><a href="#7-8-1-显示副标题" class="headerlink" title="7.8.1 显示副标题"></a>7.8.1 显示副标题</h5><p>在<code>themes/next/source/css/_schemes/Mist/_header.styl</code>中将 <code>.site-subtitle { display: none; }</code>注释掉</p>
+<h5 id="7-8-2-动态背景"><a href="#7-8-2-动态背景" class="headerlink" title="7.8.2 动态背景"></a>7.8.2 动态背景</h5><p>主题配置文件中，找到<code>canvas_nest</code>，改 <code>canvas_nest: true</code>，根据<code>_config.yml</code>描述，下载对应脚本，将<code>canvas-nest</code>放在<code>\blog\themes\next\source\lib</code>目录下。</p>
+<h5 id="7-8-3-文章结束标志"><a href="#7-8-3-文章结束标志" class="headerlink" title="7.8.3 文章结束标志"></a>7.8.3 文章结束标志</h5><p>在路径 <code>\themes\next\layout\_macro</code> 中新建 <code>passage-end-tag.swig</code> 文件,并添加以下内容：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line">    &#123;% if not is_index %&#125;</span><br><span class="line">        <span class="tag">&lt;<span class="name">div</span> <span class="attr">style</span>=<span class="string">"text-align:center;color: #ccc;font-size:14px;"</span>&gt;</span>-------------本文结束 <span class="tag">&lt;<span class="name">i</span> <span class="attr">class</span>=<span class="string">"fa fa-archive"</span>&gt;</span><span class="tag">&lt;/<span class="name">i</span>&gt;</span> 感谢您的阅读-------------<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    &#123;% endif %&#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>接着打开<code>\themes\next\layout\_macro\post.swig</code>文件，在<code>post-body</code> 之后，即<code>(END POST BODY)</code>，添加如下代码：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123;% if not is_index %&#125;</span><br><span class="line">  &#123;% include 'passage-end-tag.swig' %&#125;</span><br><span class="line">&#123;% endif %&#125;</span><br></pre></td></tr></table></figure>
+<p>然后打开主题配置文件（_config.yml),在末尾添加：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># 文章末尾添加“本文结束”标记</span><br><span class="line">passage_end_tag:</span><br><span class="line">  enabled: true</span><br></pre></td></tr></table></figure>
+    </div>
+
+    
+    
+    
+
+    
+      <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束 <i class="fa fa-archive"></i> 感谢您的阅读-------------</div>
+    
+</div>
+    
+      
+        <div class="reward-container">
+  <div>觉得好，点这里 ^_^</div>
+  <button disable="enable" onclick="var qr = document.getElementById(&quot;qr&quot;); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.png" alt="PenseeStroller 微信支付">
+        <p>微信支付</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/images/alipay.png" alt="PenseeStroller 支付宝">
+        <p>支付宝</p>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-title">
+    <strong>本文标题：</strong>Hexo + Github 搭建个人博客
+  </li>
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>PenseeStroller
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://invictuscj.win/articles/others/create-blog/" title="Hexo + Github 搭建个人博客">http://invictuscj.win/articles/others/create-blog/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>许可协议： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/zh-CN" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/hexo/" rel="tag"><i class="fa fa-tag"></i> hexo</a>
+              <a href="/tags/npm/" rel="tag"><i class="fa fa-tag"></i> npm</a>
+              <a href="/tags/github/" rel="tag"><i class="fa fa-tag"></i> github</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+                <a href="/articles/os/centos-update/" rel="prev" title="CentOS源更换,更新系统">
+                  CentOS源更换,更新系统 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+    <div class="comments" id="comments"></div>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-文档"><span class="nav-text">1. 文档</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-环境准备"><span class="nav-text">2. 环境准备</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-Windows下安装部署"><span class="nav-text">3. Windows下安装部署</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#3-1-安装Git"><span class="nav-text">3.1 安装Git</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-2-安装Node-js"><span class="nav-text">3.2 安装Node.js</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-3-安装结果检查"><span class="nav-text">3.3 安装结果检查</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-Debian下安装"><span class="nav-text">4. Debian下安装</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#4-1-更新系统环境软件包"><span class="nav-text">4.1 更新系统环境软件包</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-2-安装git"><span class="nav-text">4.2 安装git</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-3-安装Node-js"><span class="nav-text">4.3 安装Node.js</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-Github设置"><span class="nav-text">5. Github设置</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#5-1-配置Git以上传远程服务器"><span class="nav-text">5.1 配置Git以上传远程服务器</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-安装配置Hexo"><span class="nav-text">6. 安装配置Hexo</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-部署博客项目"><span class="nav-text">7. 部署博客项目</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#7-1-初始化Hexo"><span class="nav-text">7.1 初始化Hexo</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#7-2-启动Hexo"><span class="nav-text">7.2 启动Hexo</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#7-3-Hexo的常用命令"><span class="nav-text">7.3 Hexo的常用命令</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#7-4-Hexo的常用组合命令"><span class="nav-text">7.4 Hexo的常用组合命令</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#7-5-功能插件"><span class="nav-text">7.5 功能插件</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#7-5-1-部署相关："><span class="nav-text">7.5.1 部署相关：</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#7-5-2-本地搜索"><span class="nav-text">7.5.2 本地搜索</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#7-6-Hexo主题修改"><span class="nav-text">7.6 Hexo主题修改</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#7-7-全局配置文件"><span class="nav-text">7.7 全局配置文件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#7-8-美化"><span class="nav-text">7.8 美化</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#7-8-1-显示副标题"><span class="nav-text">7.8.1 显示副标题</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#7-8-2-动态背景"><span class="nav-text">7.8.2 动态背景</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#7-8-3-文章结束标志"><span class="nav-text">7.8.3 文章结束标志</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <img class="site-author-image" itemprop="image" alt="PenseeStroller"
+    src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">PenseeStroller</p>
+  <div class="site-description" itemprop="description">点滴汇集</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">19</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">22</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/penseestroller" title="GitHub &amp;rarr; https:&#x2F;&#x2F;github.com&#x2F;penseestroller" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="http://weibo.com/penseestroller" title="Weibo &amp;rarr; http:&#x2F;&#x2F;weibo.com&#x2F;penseestroller" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/Mailto:invictuscj@foxmail.com" title="E-Mail &amp;rarr; Mailto:invictuscj@foxmail.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/zh-CN" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title">
+      <i class="fa fa-fw fa-link"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="http://iissnan.com/progit/" title="http:&#x2F;&#x2F;iissnan.com&#x2F;progit&#x2F;" rel="noopener" target="_blank">Pro Git</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://dotnet.github.io/" title="https:&#x2F;&#x2F;dotnet.github.io&#x2F;" rel="noopener" target="_blank">DotNet</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://www.waspring.com/" title="https:&#x2F;&#x2F;www.waspring.com&#x2F;" rel="noopener" target="_blank">冰泉蛙</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>     
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 2016 – 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">PenseeStroller</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  
+  <script color='0,0,255' opacity='0.5' zIndex='-1' count='99' src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
+<script src="/js/schemes/muse.js"></script>
+<script src="/js/next-boot.js"></script>
+
+
+
+  
+
+
+
+
+  <script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+
+<script>
+NexT.utils.getScript('//cdnjs.cloudflare.com/ajax/libs/valine/1.3.10/Valine.min.js', () => {
+  var GUEST = ['nick', 'mail', 'link'];
+  var guest = 'nick,mail,link';
+  guest = guest.split(',').filter(item => {
+    return GUEST.includes(item);
+  });
+  new Valine({
+    el: '#comments',
+    verify: false,
+    notify: false,
+    appId: 'ke9B1WOTQSSQdGyo0JG6iu1T-9Nh9j0Va',
+    appKey: 'R6acUmo0uEU4hJEKpi3iinul',
+    placeholder: "请留下您的脚印......",
+    avatar: 'wavatar',
+    meta: guest,
+    pageSize: '10' || 10,
+    visitor: false,
+    lang: 'zh-cn' || 'zh-cn',
+    path: location.pathname,
+    recordIP: true,
+    serverURLs: ''
+  });
+}, window.Valine);
+</script>
+
+</body>
+</html>
